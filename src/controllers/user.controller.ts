@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { userService } from "../services/user.service";
-import { IDtoUser } from "../interfaces/user.interfsce";
-import { ApiError } from "../errors/api-error";
+import { IUser } from "../interfaces/user.interfsce";
 
 class UserController {
    public async getAll(req: Request, res: Response, next: NextFunction) {
@@ -15,11 +14,11 @@ class UserController {
 
    public async getById(req: Request, res: Response, next: NextFunction) {
       try {
-         const userId = Number(req.params.userId);
+         const userId = req.params.userId;
 
-         if (Number.isNaN(userId) || userId < 0 || !Number.isInteger(userId)) {
-            throw new ApiError('Wrong user Id', 400)
-         }
+         // if (Number.isNaN(userId) || userId < 0 || !Number.isInteger(userId)) {
+         //    throw new ApiError('Wrong user Id', 400)
+         // }
 
          const user = await userService.getById(userId);
          res.json(user);
@@ -30,7 +29,7 @@ class UserController {
 
    public async create(req: Request, res: Response, next: NextFunction) {
       try {
-         const dto = req.body as IDtoUser
+         const dto = req.body as IUser
          const result = await userService.create(dto);
          res.status(201).json(result);
       } catch (e) {
@@ -40,8 +39,8 @@ class UserController {
 
    public async update(req: Request, res: Response, next: NextFunction) {
       try {
-         const userId = Number(req.params.userId);
-         const dto = req.body as IDtoUser;
+         const userId = req.params.userId;
+         const dto = req.body as IUser;
          const userUpdate = await userService.update(userId, dto);
          res.status(201).json(userUpdate);
       } catch (e) {
@@ -51,7 +50,7 @@ class UserController {
 
    public async delete(req: Request, res: Response, next: NextFunction) {
       try {
-         const userId = Number(req.params.userId);
+         const userId = req.params.userId;
          await userService.delete(userId)
 
          res.sendStatus(204);
