@@ -17,39 +17,14 @@ class UserService {
    }
 
    public async create(dto: IUser): Promise<IUser> {
-      if (dto.name.length < 2 || dto.name.length > 20) {
-         throw new ApiError('Name mast be min 2 symbols and max 20 symbols', 400)
-      }
-      if (!dto.email.includes('@')) {
-         throw new ApiError('Not valid email address!', 400)
-      }
-      if (dto.password.length < 6) {
-         throw new ApiError('Not valid password', 400)
-      }
       return await userRepository.create(dto);
    }
 
    public async update(userId: string, dto: IUser): Promise<IUser> {
-      // if (Number.isNaN(userId) || userId < 0 || !Number.isInteger(userId)) {
-      //    throw new ApiError('Wrong user Id', 400)
-      // }
-
-      if (dto.name.length < 2 || dto.name.length > 20) {
-         throw new ApiError('Name mast be min 2 symbols and max 20 symbols', 400)
-      }
-      if (!dto.email.includes('@')) {
-         throw new ApiError('Not valid email address!', 400)
-      }
-      if (dto.password.length < 6) {
-         throw new ApiError('Not valid password', 400)
-      }
       return await userRepository.update(userId, dto);
    }
 
    public async delete(userId: string): Promise<void> {
-      // if (Number.isNaN(userId) || userId < 0 || !Number.isInteger(userId)) {
-      //    throw new ApiError('Wrong user Id', 400)
-      // }
       await userRepository.delete(userId);
    }
 }

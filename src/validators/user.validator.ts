@@ -12,8 +12,8 @@ export const userValidator = Joi.object({
 })
 
 export const userUpdateValidator = Joi.object({
-   name: Joi.string().alphanum().min(3).max(30).trim().required(),
-   email: Joi.string().regex(regex.EMAIL).lowercase().trim().required(),
-   age: Joi.number().integer().min(1).max(100).required(),
+   name: Joi.string().alphanum().min(3).max(30).trim(),
+   email: Joi.string().regex(regex.EMAIL).lowercase().trim(),
+   age: Joi.number().integer().min(1).max(100),
    phone: Joi.string().regex(regex.PHONE).trim(),
 })
