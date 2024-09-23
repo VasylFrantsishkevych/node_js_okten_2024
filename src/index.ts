@@ -4,6 +4,7 @@ import { ApiError } from "./errors/api-error";
 import { userRouter } from "./routers/user.router";
 import { configs } from "./config/configs";
 import mongoose from "mongoose";
+import { authRouter } from "./routers/auth.router";
 
 const app = express();
 
@@ -15,7 +16,8 @@ app.use("*", (req:Request, res: Response, next: NextFunction) => {
    next();
 });
 
-app.use('/users', userRouter)
+app.use('/auth', authRouter);
+app.use('/users', userRouter);
 
 app.use('*', (error: ApiError, req:Request, res: Response, next: NextFunction) => {
    res.status(error.status || 500).send(error.message);
@@ -32,22 +34,3 @@ app.listen(configs.APP_PORT, async () => {
 });
 
 
-// tsc --init - створює файл tsconfig
-// npm i -D 
-// @types/express - типи для express
-// @types/node - типи для node
-// rimraf - удаляє dist
-// tsc-watch - 
-// ts-node - 
-// nodemon - 
-
-// для лінтера 
-// eslint --init - створить файл лінтера
-// npm i -D 
-// @typescript-eslint/eslint-plugin 
-// @typescript-eslint/parser 
-// eslint eslint-plugin-import 
-// eslint-config-prettier 
-// eslint-plugin-prettier 
-// eslint-plugin-simple-import-sort 
-// prettier

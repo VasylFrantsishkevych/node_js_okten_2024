@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { userService } from "../services/user.service";
 import { IUser } from "../interfaces/user.interfsce";
+import { ITokenPayload } from "../interfaces/token.interface";
 
 class UserController {
    public async getAll(req: Request, res: Response, next: NextFunction) {
@@ -16,10 +17,6 @@ class UserController {
       try {
          const userId = req.params.userId;
 
-         // if (Number.isNaN(userId) || userId < 0 || !Number.isInteger(userId)) {
-         //    throw new ApiError('Wrong user Id', 400)
-         // }
-
          const user = await userService.getById(userId);
          res.json(user);
       } catch (e) {
@@ -27,31 +24,32 @@ class UserController {
       }
    }
 
-   public async create(req: Request, res: Response, next: NextFunction) {
+   public async getMe(req: Request, res: Response, next: NextFunction) {
       try {
-         const dto = req.body as IUser
-         const result = await userService.create(dto);
-         res.status(201).json(result);
+         const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
+         const user = await userService.getMe(jwtPayload);
+         res.json(user);
       } catch (e) {
          next(e)
       }
    }
 
-   public async update(req: Request, res: Response, next: NextFunction) {
+   public async updateMe(req: Request, res: Response, next: NextFunction) {
       try {
-         const userId = req.params.userId;
+         const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
          const dto = req.body as IUser;
-         const userUpdate = await userService.update(userId, dto);
+         const userUpdate = await userService.updateMe(jwtPayload, dto);
          res.status(201).json(userUpdate);
       } catch (e) {
          next(e);
       }
    }
 
-   public async delete(req: Request, res: Response, next: NextFunction) {
+   public async deleteMe(req: Request, res: Response, next: NextFunction) {
       try {
-         const userId = req.params.userId;
-         await userService.delete(userId)
+         const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
+   
+         await userService.deleteMe(jwtPayload)
 
          res.sendStatus(204);
       } catch (e) {

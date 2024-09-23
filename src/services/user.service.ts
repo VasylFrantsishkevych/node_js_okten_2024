@@ -1,4 +1,5 @@
 import { ApiError } from "../errors/api-error";
+import { ITokenPayload } from "../interfaces/token.interface";
 import {  IUser } from "../interfaces/user.interfsce";
 import { userRepository } from "../repositories/user.repository";
 
@@ -16,16 +17,21 @@ class UserService {
       return user;
    }
 
-   public async create(dto: IUser): Promise<IUser> {
-      return await userRepository.create(dto);
+   public async getMe(jwtPayload: ITokenPayload): Promise<IUser> {
+      const user = await userRepository.getById(jwtPayload.userId);
+      if (!user) {
+         throw new ApiError(`User with ID: ${jwtPayload.userId} no exist!`, 404);
+      }
+
+      return user;
    }
 
-   public async update(userId: string, dto: IUser): Promise<IUser> {
-      return await userRepository.update(userId, dto);
+   public async updateMe(jwtPayload: ITokenPayload, dto: IUser): Promise<IUser> {
+      return await userRepository.update(jwtPayload.userId, dto);
    }
 
-   public async delete(userId: string): Promise<void> {
-      await userRepository.delete(userId);
+   public async deleteMe(jwtPayload: ITokenPayload): Promise<void> {
+      await userRepository.delete(jwtPayload.userId);
    }
 }
 
