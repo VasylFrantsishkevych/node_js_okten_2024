@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ISignIn, IUser } from "../interfaces/user.interfsce";
 import { authService } from "../services/auth.service";
+import { ITokenPayload } from "../interfaces/token.interface";
 
 class AuthController {
    public async signUp(req: Request, res: Response, next: NextFunction) {
@@ -17,6 +18,18 @@ class AuthController {
       try {
          const dto = req.body as ISignIn
          const result = await authService.signIn(dto);
+         res.status(201).json(result)
+      } catch (e) {
+         next(e)
+      }
+   }
+
+   public async refresh(req: Request, res: Response, next: NextFunction) {
+      try {
+         const token = req.res.locals.refreshToken as string;
+         const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
+
+         const result = await authService.refresh(token, jwtPayload);
          res.status(201).json(result)
       } catch (e) {
          next(e)
