@@ -18,7 +18,7 @@ class UserRepository {
       return await User.create(dto);
    }  
    
-   public async update(userId: string, dto: IUser): Promise<IUser> {
+   public async updateById(userId: string, dto: Partial<IUser>): Promise<IUser> {
       return await User.findByIdAndUpdate(userId, dto, {new: true});
    }
 
