@@ -42,6 +42,10 @@ class TokenService {
             secret = configs.ACTION_FORGOT_PASSWORD_SECRET;
             expiration = configs.ACTION_FORGOT_PASSWORD_EXPIRATION;
             break; 
+         case ActionTokenTypeEnum.VERIFY_EMAIL:
+            secret = configs.ACTION_VERIFY_EMAIL_SECRET;
+            expiration = configs.ACTION_VERIFY_EMAIL_EXPIRATION;
+            break;   
          default:
             throw new ApiError('Invaalid token type', 400);
       }
@@ -56,6 +60,9 @@ class TokenService {
             case ActionTokenTypeEnum.FORGOT_PASSWORD:
                secret = configs.ACTION_FORGOT_PASSWORD_SECRET;
                break; 
+            case ActionTokenTypeEnum.VERIFY_EMAIL:
+               secret = configs.ACTION_FORGOT_PASSWORD_SECRET;
+               break;   
             default:
                   throw new ApiError('Invaalid token type', 400);   
          }

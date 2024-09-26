@@ -2,7 +2,7 @@ import { ActionTokenTypeEnum } from "../enums/action-token-type.enum";
 import { EmailTypeEnum } from "../enums/email-type.enum";
 import { ApiError } from "../errors/api-error";
 import { ITokenPair, ITokenPayload } from "../interfaces/token.interface";
-import { IResetPasswordSend, IResetPasswordSet, ISignIn, IUser } from "../interfaces/user.interfsce";
+import { IResetPasswordSend, IResetPasswordSet, ISignIn, IUser, IVerifyEmail } from "../interfaces/user.interfsce";
 import { actionTokenRepository } from "../repositories/action-token.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
@@ -19,8 +19,20 @@ class AuthService {
       const tokens = tokenService.generatTokens({userId: user._id, role: user.role})
       await tokenRepository.create({...tokens, _userId: user._id});
 
+      const token = tokenService.generateActionTokens(
+         {userId: user._id, role: user.role},
+         ActionTokenTypeEnum.VERIFY_EMAIL
+      );
+
+      await actionTokenRepository.create({
+         token,
+         type: ActionTokenTypeEnum.VERIFY_EMAIL,
+         _userId: user._id
+      });
+
       await emailService.sendMail(EmailTypeEnum.WELCOME, user.email, {
-         name: user.name
+         name: user.name,
+         actionToken: token,
       }
       )
 
@@ -107,6 +119,10 @@ class AuthService {
       })
 
       await tokenRepository.deleteManyByParams({_userId: JwtPayload.userId})
+   }
+
+   public async veryfyEmail(dto: IVerifyEmail, JwtPayload: ITokenPayload): Promise<void> {
+      await userRepository.updateById(JwtPayload.userId, {isVerified: dto.isVerified});
    }
 
    private async isEmailExistOrThrow(email: string): Promise<void> {
