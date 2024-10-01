@@ -123,6 +123,11 @@ class AuthService {
 
    public async veryfyEmail(dto: IVerifyEmail, JwtPayload: ITokenPayload): Promise<void> {
       await userRepository.updateById(JwtPayload.userId, {isVerified: dto.isVerified});
+
+      await actionTokenRepository.deleteManyByParams({
+         _userId: JwtPayload.userId,
+         type: ActionTokenTypeEnum.VERIFY_EMAIL,
+      })
    }
 
    private async isEmailExistOrThrow(email: string): Promise<void> {
