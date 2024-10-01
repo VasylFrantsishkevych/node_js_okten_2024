@@ -13,7 +13,7 @@ const userSchema = new Schema({
    idDeleted: {type: Boolean, default: false},
 },
    {
-      timestamp: true,
+      timestamps: true,
       versionKey: false,
    }
 );

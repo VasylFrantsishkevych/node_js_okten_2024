@@ -22,3 +22,8 @@ export const signIn = Joi.object({
    email: Joi.string().regex(regex.EMAIL).lowercase().trim().required(),
    password: Joi.string().regex(regex.PASSWORD).required(),
 })
+
+export const changePassword = Joi.object({
+   oldPassword: Joi.string().regex(regex.PASSWORD).required(),
+   password: Joi.string().regex(regex.PASSWORD).required(),
+ });

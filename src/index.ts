@@ -5,6 +5,7 @@ import { userRouter } from "./routers/user.router";
 import { configs } from "./config/configs";
 import mongoose from "mongoose";
 import { authRouter } from "./routers/auth.router";
+import { cronRunner } from "./crons";
 
 const app = express();
 
@@ -30,6 +31,7 @@ process.on('uncaughtException', (error) => {
 
 app.listen(configs.APP_PORT, async () => {
    await mongoose.connect(configs.MONGO_URI);
+   cronRunner();
    console.log(`Server is running on http://${configs.APP_HOST}:${configs.APP_PORT}`);
 });
 

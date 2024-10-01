@@ -1,5 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { IResetPasswordSend, IResetPasswordSet, ISignIn, IUser, IVerifyEmail } from "../interfaces/user.interfsce";
+import { 
+   IChangePassword, 
+   IResetPasswordSend, 
+   IResetPasswordSet, 
+   ISignIn, 
+   IUser, 
+   IVerifyEmail 
+} from "../interfaces/user.interfsce";
 import { authService } from "../services/auth.service";
 import { ITokenPayload } from "../interfaces/token.interface";
 
@@ -79,6 +86,19 @@ class AuthController {
         const dto = req.body as IResetPasswordSet;
   
         await authService.forgotPasswordSet(dto, jwtPayload);
+        res.sendStatus(204);
+      } catch (e) {
+        next(e);
+      }
+    }
+
+    public async changePassword(req: Request, res: Response, next: NextFunction) {
+      try {
+        const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
+        const dto = req.body as IChangePassword;
+   
+        await authService.changePassword(jwtPayload, dto);
+   
         res.sendStatus(204);
       } catch (e) {
         next(e);
