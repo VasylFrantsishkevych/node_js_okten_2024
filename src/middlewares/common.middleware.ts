@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { isObjectIdOrHexString } from "mongoose";
 import { ApiError } from "../errors/api-error";
+import { ObjectSchema } from "joi";
 
 class CommonMiddleware {
    public isIdvalid(key: string) {
@@ -29,6 +30,17 @@ class CommonMiddleware {
             next(e)
          }
       }
+   }
+
+   public isQueryValid(validator: ObjectSchema) {
+      return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+          req.query = await validator.validateAsync(req.query);
+          next();
+        } catch (e) {
+          next(new ApiError(e.details[0].message, 400));
+        }
+      };
    }
 }
 

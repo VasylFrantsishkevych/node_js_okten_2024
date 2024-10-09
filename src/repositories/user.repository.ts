@@ -1,10 +1,24 @@
-import { IUser } from "../interfaces/user.interfsce";
+import { FilterQuery } from "mongoose";
+import { IUser, IUserListQuery } from "../interfaces/user.interfsce";
 import { Token } from "../models/token.models";
 import { User } from "../models/user.models";
 
 class UserRepository {
-   public async getAll(): Promise<IUser[]> {
-      return await User.find({});
+   public async getList(query: IUserListQuery): Promise<[IUser[], number]> {
+      const filterObj: FilterQuery<IUser> = { };
+    if (query.search) {
+      filterObj.name = { $regex: query.search, $options: "i" };
+      // filterObj.$or = [
+      //   { name: { $regex: query.search, $options: "i" } },
+      //   { email: { $regex: query.search, $options: "i" } },
+      // ];
+    }
+
+    const skip = query.limit * (query.page - 1);
+    return await Promise.all([
+      User.find(filterObj).limit(query.limit).skip(skip),
+      User.countDocuments(filterObj),
+    ]);
    }
 
    public async getById(userId: string): Promise<IUser | null> {

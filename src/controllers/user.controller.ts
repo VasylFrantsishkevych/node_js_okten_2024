@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { userService } from "../services/user.service";
-import { IUser } from "../interfaces/user.interfsce";
+import { IUser, IUserListQuery } from "../interfaces/user.interfsce";
 import { ITokenPayload } from "../interfaces/token.interface";
 
 class UserController {
-   public async getAll(req: Request, res: Response, next: NextFunction) {
+   public async getList(req: Request, res: Response, next: NextFunction) {
       try {
-         const users = await userService.getAll();
+         const query = req.query as IUserListQuery;
+         const users = await userService.getList(query);
          res.json(users);
       } catch (e) {
          next(e)

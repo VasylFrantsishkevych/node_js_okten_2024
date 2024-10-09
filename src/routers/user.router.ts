@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { userController } from "../controllers/user.controller";
 import { commonMiddleware } from "../middlewares/common.middleware";
-import { userUpdateValidator} from "../validators/user.validator";
+import { listQuery, userUpdateValidator} from "../validators/user.validator";
 import { authMiddleware } from "../middlewares/auth.middleware";
 
 const router = Router();
 
-router.get('/', userController.getAll);
+router.get('/', commonMiddleware.isQueryValid(listQuery), userController.getList);
 
 router.get('/me', authMiddleware.checkAccessToken, userController.getMe);
 router.put(
