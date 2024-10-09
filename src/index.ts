@@ -1,16 +1,19 @@
 import express, {NextFunction, Request, Response } from "express";
+import swaggerUi from "swagger-ui-express";
+import mongoose from "mongoose";
 
 import { ApiError } from "./errors/api-error";
 import { userRouter } from "./routers/user.router";
 import { configs } from "./config/configs";
-import mongoose from "mongoose";
 import { authRouter } from "./routers/auth.router";
 import { cronRunner } from "./crons";
+import swaggerDocument from "../docs/swagger.json";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("*", (req:Request, res: Response, next: NextFunction) => {
    console.log(`${req.method} ${req.path}`);
