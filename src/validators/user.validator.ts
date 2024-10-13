@@ -35,5 +35,5 @@ export const changePassword = Joi.object({
    page: Joi.number().min(1).default(1),
    search: Joi.string().trim().lowercase(),
    order: Joi.string().valid(...Object.values(OrderEnum)),
-   orderBy: Joi.string().valid(...Object.values(UserListOrderByEnum)),
+   orderBy: Joi.string().valid(...Object.values(UserListOrderByEnum)).default(UserListOrderByEnum.CREATED),
  })
